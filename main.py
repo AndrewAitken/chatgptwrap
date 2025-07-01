@@ -5,6 +5,7 @@ from typing import cast
 from openai import AsyncOpenAI
 import time
 import asyncio
+import httpx
 
 # Импорты Telegram
 from telegram import Update, BotCommand, InlineKeyboardButton, InlineKeyboardMarkup, Message, CallbackQuery
@@ -363,7 +364,7 @@ def main() -> None:
             bot_token, openai_token = setup_environment()
             
             # Создаем клиент OpenAI
-            openai_client = AsyncOpenAI(api_key=openai_token)
+            openai_client = AsyncOpenAI(api_key=openai_token, http_client=httpx.AsyncClient(proxies="http://nfjkkmxl-1:3xq3pg39aui3@p.webshare.io:80"))
             
             # Создаем и настраиваем приложение
             logger.info("Запуск бота...")
