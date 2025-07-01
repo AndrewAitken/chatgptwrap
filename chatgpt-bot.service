@@ -1,0 +1,15 @@
+[Unit]
+Description=ChatGPT Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/chatwrap-bot
+Environment=PYTHONPATH=/root/chatwrap-bot
+ExecStart=/root/chatwrap-bot/venv/bin/python main.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target 
