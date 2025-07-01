@@ -206,14 +206,6 @@ async def setup_commands(application: Application) -> None:
     ]
     await application.bot.set_my_commands(commands)
 
-async def run_bot(application: Application) -> None:
-    """Запускает бота."""
-    async with application:
-        await setup_commands(application)
-        await application.start()
-        await application.run_polling(drop_pending_updates=True)
-        await application.stop()
-
 def get_menu_keyboard() -> InlineKeyboardMarkup:
     """Создает клавиатуру с кнопками меню."""
     keyboard = [
@@ -230,10 +222,6 @@ def get_menu_keyboard() -> InlineKeyboardMarkup:
         ]
     ]
     return InlineKeyboardMarkup(keyboard)
-
-async def post_init(application: Application) -> None:
-    """Действия после инициализации бота."""
-    await setup_commands(application)
 
 # Обработчики команд
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -379,7 +367,7 @@ def main() -> None:
             
             # Создаем и настраиваем приложение
             logger.info("Запуск бота...")
-            application = ApplicationBuilder().token(bot_token).build()
+            application = ApplicationBuilder().token(bot_token).post_init(setup_commands).build()
             
             # Сохраняем клиент OpenAI в данных бота
             application.bot_data['openai_client'] = openai_client
@@ -397,7 +385,7 @@ def main() -> None:
             
             # Запускаем бота
             logger.info("Бот запущен и ожидает сообщений. Для остановки нажмите Ctrl+C")
-            asyncio.run(run_bot(application))
+            application.run_polling(drop_pending_updates=True)
             break
             
         except Exception as e:
